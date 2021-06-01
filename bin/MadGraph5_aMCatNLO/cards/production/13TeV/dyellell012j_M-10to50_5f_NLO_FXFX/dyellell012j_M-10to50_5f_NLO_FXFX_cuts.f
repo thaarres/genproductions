@@ -1,4 +1,4 @@
-c *This file contains cuts(0~50) on the WpT: line413-428*
+c
 c This file contains the default cuts (as defined in the run_card.dat)
 c and can easily be extended by the user to include other.  This
 c function should return true if event passes cuts
@@ -145,6 +145,12 @@ c DeltaR and invariant mass cuts
                               passcuts_user=.false.
                               return
                            endif
+c user defined cut on invariant mass < 50 GeV.
+                           if (invm2_04(p(0,i),p(0,j),1d0).gt.5d1**2)
+     $                          then
+                              passcuts_user=.false.
+                              return
+                           endif 
                         endif
                      endif
                   endif
@@ -410,21 +416,6 @@ C PUT HERE YOUR USER-DEFINED CUTS
 C***************************************************************
 C***************************************************************
 C
-      do i=0,nexternal
-         do j=i+1,nexternal
-            if (((abs(ipdg(i)).eq.12.or.abs(ipdg(i)).eq.14.or.
-     &        abs(ipdg(i)).eq.16).and.
-     &        (ipdg(j).eq.-sign(abs(ipdg(i))-1,ipdg(i)))).or.
-     &        ((abs(ipdg(i)).eq.11.or.abs(ipdg(i)).eq.13.or.
-     &        abs(ipdg(i)).eq.15).and.
-     &        (ipdg(j).eq.-sign(abs(ipdg(i))+1,ipdg(i))))) then
-              if ( (p(1,i)+p(1,j))**2 + (p(2,i)+p(2,j))**2 .gt.50d0**2 ) then
-                passcuts_user=.false.
-                return
-              endif
-            endif
-         enddo
-      enddo
 c$$$C EXAMPLE: cut on top quark pT
 c$$$C          Note that PDG specific cut are more optimised than simple user cut
 c$$$      do i=1,nexternal   ! loop over all external particles
@@ -568,10 +559,10 @@ C
 C
     2 IF (N.EQ.1)            RETURN
       IF (MODE)    10,20,30
-   10 STOP 5 ! CALL SORTTI (A,INDEX,N)
+   10 CALL SORTTI (A,INDEX,N)
       GO TO 40
 C
-   20 STOP 5 ! CALL SORTTC(A,INDEX,N)
+   20 CALL SORTTC(A,INDEX,N)
       GO TO 40
 C
    30 CALL SORTTF (A,INDEX,N)
